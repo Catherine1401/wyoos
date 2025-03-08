@@ -33,13 +33,14 @@ using namespace myos::hardwarecommunication;
 using namespace myos::gui;
 using namespace myos::net;
 
+static uint8_t x=0,y=0;
 
 
 void printf(char* str)
 {
     static uint16_t* VideoMemory = (uint16_t*)0xb8000;
 
-    static uint8_t x=0,y=0;
+
 
     for(int i = 0; str[i] != '\0'; ++i)
     {
@@ -70,6 +71,23 @@ void printf(char* str)
             y = 0;
         }
     }
+}
+
+void clearScreen()
+{
+    static uint16_t* VideoMemory = (uint16_t*)0xb8000;
+
+
+    for(int i = 0; i < 25; i++)
+    {
+        for(int j = 0; j < 80; j++)
+        {
+            VideoMemory[80*i + j] = (VideoMemory[80*i + j] & 0xFF00) | ' ';
+        }
+    }
+
+    x = 0;
+    y = 0;
 }
 
 void printfHex(uint8_t key)
@@ -231,7 +249,7 @@ extern "C" void callConstructors()
 
 extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot_magic*/)
 {
-    printf("Hello World! --- http://www.AlgorithMan.de\n");
+    printf("hello worlds\n");
 
     GlobalDescriptorTable gdt;
     
@@ -374,6 +392,7 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot
     interrupts.Activate();
 
     printf("\n\n\n\n");
+
     
     arp.BroadcastMACAddress(gip_be);
     
@@ -394,6 +413,7 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot
     //UserDatagramProtocolSocket* udpsocket = udp.Listen(1234);
     //udp.Bind(udpsocket, &udphandler);
 
+
     
     while(1)
     {
@@ -401,4 +421,5 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot
             desktop.Draw(&vga);
         #endif
     }
+
 }

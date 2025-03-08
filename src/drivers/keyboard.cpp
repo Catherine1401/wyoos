@@ -1,44 +1,50 @@
-
 #include <drivers/keyboard.h>
 
 using namespace myos::common;
 using namespace myos::drivers;
 using namespace myos::hardwarecommunication;
 
+void clearScreen();
+static uint16_t flag = 0, op = 0;
+static int64_t first = 0, second = 0;
 
-KeyboardEventHandler::KeyboardEventHandler()
-{
+uint64_t divide(uint64_t a, uint64_t b) {
+    if (b == 0) return 0;
+    uint64_t quotient = 0;
+    while (a >= b) {
+        a -= b;
+        quotient++;
+    }
+    return quotient;
 }
 
-void KeyboardEventHandler::OnKeyDown(char)
-{
+uint64_t mod(uint64_t a, uint64_t b) {
+    if (b == 0) return 0;
+    while (a >= b) {
+        a -= b;
+    }
+    return a;
 }
 
-void KeyboardEventHandler::OnKeyUp(char)
-{
-}
+KeyboardEventHandler::KeyboardEventHandler() {}
 
+void KeyboardEventHandler::OnKeyDown(char) {}
 
-
-
+void KeyboardEventHandler::OnKeyUp(char) {}
 
 KeyboardDriver::KeyboardDriver(InterruptManager* manager, KeyboardEventHandler *handler)
 : InterruptHandler(manager, 0x21),
 dataport(0x60),
-commandport(0x64)
-{
+commandport(0x64) {
     this->handler = handler;
 }
 
-KeyboardDriver::~KeyboardDriver()
-{
-}
+KeyboardDriver::~KeyboardDriver() {}
 
 void printf(char*);
 void printfHex(uint8_t);
 
-void KeyboardDriver::Activate()
-{
+void KeyboardDriver::Activate() {
     while(commandport.Read() & 0x1)
         dataport.Read();
     commandport.Write(0xae); // activate interrupts
@@ -49,69 +55,132 @@ void KeyboardDriver::Activate()
     dataport.Write(0xf4);
 }
 
-uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
-{
+uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp) {
+
     uint8_t key = dataport.Read();
     
     if(handler == 0)
         return esp;
     
-    if(key < 0x80)
-    {
-        switch(key)
-        {
-            case 0x02: handler->OnKeyDown('1'); break;
-            case 0x03: handler->OnKeyDown('2'); break;
-            case 0x04: handler->OnKeyDown('3'); break;
-            case 0x05: handler->OnKeyDown('4'); break;
-            case 0x06: handler->OnKeyDown('5'); break;
-            case 0x07: handler->OnKeyDown('6'); break;
-            case 0x08: handler->OnKeyDown('7'); break;
-            case 0x09: handler->OnKeyDown('8'); break;
-            case 0x0A: handler->OnKeyDown('9'); break;
-            case 0x0B: handler->OnKeyDown('0'); break;
-
-            case 0x10: handler->OnKeyDown('q'); break;
-            case 0x11: handler->OnKeyDown('w'); break;
-            case 0x12: handler->OnKeyDown('e'); break;
-            case 0x13: handler->OnKeyDown('r'); break;
-            case 0x14: handler->OnKeyDown('t'); break;
-            case 0x15: handler->OnKeyDown('z'); break;
-            case 0x16: handler->OnKeyDown('u'); break;
-            case 0x17: handler->OnKeyDown('i'); break;
-            case 0x18: handler->OnKeyDown('o'); break;
-            case 0x19: handler->OnKeyDown('p'); break;
-
-            case 0x1E: handler->OnKeyDown('a'); break;
-            case 0x1F: handler->OnKeyDown('s'); break;
-            case 0x20: handler->OnKeyDown('d'); break;
-            case 0x21: handler->OnKeyDown('f'); break;
-            case 0x22: handler->OnKeyDown('g'); break;
-            case 0x23: handler->OnKeyDown('h'); break;
-            case 0x24: handler->OnKeyDown('j'); break;
-            case 0x25: handler->OnKeyDown('k'); break;
-            case 0x26: handler->OnKeyDown('l'); break;
-
-            case 0x2C: handler->OnKeyDown('y'); break;
-            case 0x2D: handler->OnKeyDown('x'); break;
-            case 0x2E: handler->OnKeyDown('c'); break;
-            case 0x2F: handler->OnKeyDown('v'); break;
-            case 0x30: handler->OnKeyDown('b'); break;
-            case 0x31: handler->OnKeyDown('n'); break;
-            case 0x32: handler->OnKeyDown('m'); break;
-            case 0x33: handler->OnKeyDown(','); break;
-            case 0x34: handler->OnKeyDown('.'); break;
-            case 0x35: handler->OnKeyDown('-'); break;
-
-            case 0x1C: handler->OnKeyDown('\n'); break;
-            case 0x39: handler->OnKeyDown(' '); break;
-
-            default:
-            {
-                printf("KEYBOARD 0x");
-                printfHex(key);
+    if(key < 0x80) {
+        switch(key) {
+            case 0x02:
+                printf("1");
+                if (flag == 0) first = first * 10 + 1;
+                else if (flag == 1) second = second * 10 + 1;
+                else { first = 0; second = 0; }
                 break;
-            }
+            case 0x03:
+                printf("2");
+                if (flag == 0) first = first * 10 + 2;
+                else if (flag == 1) second = second * 10 + 2;
+                else { first = 0; second = 0; }
+                break;
+            case 0x04:
+                printf("3");
+                if (flag == 0) first = first * 10 + 3;
+                else if (flag == 1) second = second * 10 + 3;
+                else { first = 0; second = 0; }
+                break;
+            case 0x05:
+                printf("4");
+                if (flag == 0) first = first * 10 + 4;
+                else if (flag == 1) second = second * 10 + 4;
+                else { first = 0; second = 0; }
+                break;
+            case 0x06:
+                printf("5");
+                if (flag == 0) first = first * 10 + 5;
+                else if (flag == 1) second = second * 10 + 5;
+                else { first = 0; second = 0; }
+                break;
+            case 0x07:
+                printf("6");
+                if (flag == 0) first = first * 10 + 6;
+                else if (flag == 1) second = second * 10 + 6;
+                else { first = 0; second = 0; }
+                break;
+            case 0x08:
+                printf("7");
+                if (flag == 0) first = first * 10 + 7;
+                else if (flag == 1) second = second * 10 + 7;
+                else { first = 0; second = 0; }
+                break;
+            case 0x09:
+                printf("8");
+                if (flag == 0) first = first * 10 + 8;
+                else if (flag == 1) second = second * 10 + 8;
+                else { first = 0; second = 0; }
+                break;
+            case 0x0A:
+                printf("9");
+                if (flag == 0) first = first * 10 + 9;
+                else if (flag == 1) second = second * 10 + 9;
+                else { first = 0; second = 0; }
+                break;
+            case 0x0B:
+                printf("0");
+                if (flag == 0) first = first * 10;
+                else if (flag == 1) second = second * 10;
+                else { first = 0; second = 0; }
+                break;
+            case 0x13:
+                clearScreen();
+                printf("Please enter operand 1: ");
+                flag = 0;
+                break;
+            case 0x0D:
+                printf("+");
+                op = 0;
+                break;
+            case 0x0C:
+                printf("-");
+                op = 1;
+                break;
+            case 0x34:
+                printf("*");
+                op = 2;
+                break;
+            case 0x35:
+                printf("/");
+                op = 3;
+                break;
+        
+            case 0x1C:
+                if (flag == 0) {
+                    printf("\n");
+                    printf("Please enter operand 2: ");
+                    flag = 1;
+                } else if (flag == 1) {
+                    printf("\n");
+                    printf("Please enter opertator(+, -, ., /): ");
+                    flag = 2;
+                } else {
+                    int64_t result;
+                    if (op == 0) result = first + second;
+                    else if (op == 1) result = first - second;
+                    else if (op == 2) result = first * second;
+                    else if (second != 0) result = divide(first, second);
+
+                    char buffer[20]; uint16_t index = 0;
+                    if (result == 0) buffer[index++] = '0';
+                    else while (result > 0) {
+                            buffer[index++] = '0' + mod(result, 10);
+                            result = divide(result, 10);
+                        }
+                    buffer[index] = '\0';
+
+                    for (uint16_t i = 0; i < index / 2; i++) {
+                        uint8_t temp = buffer[i];
+                        buffer[i] = buffer[index - 1 - i];
+                        buffer[index - 1 - i] = temp;
+                    }
+
+                    printf("\nRESULT: ");
+                    printf(buffer);
+                    flag = first = second = op = 0;
+                }
+                break;
         }
     }
     return esp;
