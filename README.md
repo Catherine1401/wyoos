@@ -1,16 +1,16 @@
 # Final Project - Simple Operating System with Arithmetic Operations  
 
 ## Overview  
-This is my final project. The requirement from the instructor is to code a simple operating system that can perform basic arithmetic operations (addition, subtraction, multiplication, and division) on two numbers.  
+This is my final project. The instructor's requirement is to code a simple operating system that performs basic arithmetic operations (addition, subtraction, multiplication, and division) on two numbers.  
 
 ### Functionality  
-- The screen displays: `"Please enter the first operand"`.  
-- After the user inputs the first operand and presses Enter, the screen displays: `"Please enter the second operand"`.  
-- After the user inputs the second operand and presses Enter, the screen displays: `"Please enter an operator (+, -, *, /)"`.  
-- After the user selects an operator and presses Enter, the system displays the result.  
+1. The screen displays: `"Please enter the first operand"`.  
+2. After the user inputs the first operand and presses Enter, the screen displays: `"Please enter the second operand"`.  
+3. After the user inputs the second operand and presses Enter, the screen displays: `"Please enter an operator (+, -, *, /)"`.  
+4. After the user selects an operator and presses Enter, the system displays the result.  
 
 ## Description  
-Since developing an operating system is a challenging task for me, I built this project using the provided source code (linked below). I made the following modifications:  
+Developing an operating system is a challenging task for me, so I built this project based on the provided source code (linked below). I made the following modifications:  
 
 ### Modifications  
 1. **Added a `clearScreen()` function** in `kernel.cpp`.  
@@ -48,7 +48,8 @@ Since developing an operating system is a challenging task for me, I built this 
   - Print `"\n"` to move to a new line.  
   - Check `flag`:  
     - If `flag == 0`: Display `"Please enter the second operand: "`, then set `flag = 1`.  
-    - If `flag == 1`:  
+    - If `flag == 1`: Display `"Please select an operator: "`, then set `flag = 2`.  
+    - If `flag == 2`:  
       - Declare `result` to store the computed value.  
       - Perform the arithmetic operation based on `op`, using `first` and `second`, and store the result in `result`.  
       - Since `printf()` only accepts character arrays, convert `result` into a character array:  
@@ -59,5 +60,5 @@ Since developing an operating system is a challenging task for me, I built this 
       - Reset all variables to `0`.  
 
 ## Source Code  
-Original source code: [GitHub Repository](https://github.com/AlgorithMan-de/wyoos.git)  
-My sourse code: [GitHub Repository](https://github.com/Catherine1401/wyoos.git)
+- **Original source code:** [GitHub Repository](https://github.com/AlgorithMan-de/wyoos.git)  
+- **My modified version:** [GitHub Repository](https://github.com/Catherine1401/wyoos.git)  
